@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import myurequests as requests
 import urllib.parse
 
-from . import models
 from . import exceptions
+from . import models
+from . import urequests as requests
+from .datetime import datetime as dtt
 from .formats import JSON, TEXT
+from .utils import noop
 
 # Base URL for the API
 API_URL = 'https://lichess.org/'
@@ -28,14 +30,11 @@ class Client(BaseClient):
     def __init__(self, auth_token, base_url=None, pgn_as_default=False):
         super().__init__(auth_token, base_url)
         self.account = Account(auth_token, base_url)
-        self.games = Games(auth_token, base_url)
         self.board = Board(auth_token, base_url)
-        self.users = Users(auth_token, base_url)
+        self.challenges = Challenges(auth_token, base_url)
+        self.games = Games(auth_token, base_url)
         self.teams = Teams(auth_token, base_url)
-
-
-def noop(arg):
-    return arg
+        self.users = Users(auth_token, base_url)
 
 
 class Requestor:
@@ -155,14 +154,14 @@ class Board(BaseClient):
         }
 
         # we time the seek
-        start = now()
+        start = dtt.now()
 
         # just keep reading to keep the search going
         for line in self._r.post(path, data=payload, fmt=TEXT, stream=True):
             pass
 
         # and return the time elapsed
-        return now() - start
+        return dtt.now() - start
 
     def stream_game_state(self, game_id):
         """Get the stream of events for a board game.
@@ -408,4 +407,49 @@ class Teams(BaseClient):
         :rtype: bool
         """
         path = '/team/%s/kick/%s' % (team_id, user_id)
+        return self._r.post(path)['ok']
+
+
+class Challenges(BaseClient):
+    def create(self, username, rated, clock_limit=None, clock_increment=None,
+               days=None, color=None, variant=None, position=None):
+        """
+        Not needed for a board.
+        """
+        raise NotImplementedError()
+
+    def create_with_accept(self, username, rated, token, clock_limit=None,
+                           clock_increment=None, days=None, color=None,
+                           variant=None, position=None):
+        """
+        """
+        raise NotImplementedError()
+
+    def create_ai(self, level=8, clock_limit=None, clock_increment=None,
+                days=None, color=None, variant=None, position=None):
+        """
+        """
+        raise NotImplementedError()
+
+    def create_open(self, clock_limit=None, clock_increment=None, variant=None, position=None):
+        """
+        """
+        raise NotImplementedError()
+
+    def accept(self, challenge_id):
+        """Accept an incoming challenge.
+        :param str challenge_id: id of the challenge to accept
+        :return: success indicator
+        :rtype: bool
+        """
+        path = 'api/challenge/{}/accept'.format(challenge_id)
+        return self._r.post(path)['ok']
+
+    def decline(self, challenge_id):
+        """Decline an incoming challenge.
+        :param str challenge_id: id of the challenge to decline
+        :return: success indicator
+        :rtype: bool
+        """
+        path = 'api/challenge/{}/decline'.format(challenge_id)
         return self._r.post(path)['ok']

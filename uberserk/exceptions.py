@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 def get_message(e):
     return e.args[0] if e.args else ''

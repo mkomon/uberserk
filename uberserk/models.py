@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from . import utils
 
-# class model(type):
 
 
 class Model():
-    # __metaclass__ = model
     @classmethod
     def convert(cls, data):
         if isinstance(data, (list, tuple)):

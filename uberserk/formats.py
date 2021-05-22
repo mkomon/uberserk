@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import ujson as json
 
 from . import utils
@@ -78,9 +79,14 @@ class JsonHandler(FormatHandler):
         :type response: :class:`requests.Response`
         :return: iterator over multiple JSON objects
         """
-        for line in response.text.splitlines():
-            if line:
-                yield json.loads(line)
+        for chunk in response:
+            for line in chunk.splitlines():
+                print('line: {}'.format(line))
+                if line:
+                    decoded_line = line.decode('utf-8')
+                    yield json.loads(decoded_line)
+                else:
+                    yield {}
 
 
 class TextHandler(FormatHandler):
@@ -92,8 +98,11 @@ class TextHandler(FormatHandler):
         return response.text
 
     def parse_stream(self, response):
-        yield from response.iter_lines()
-
+        for chunk in response:
+            for line in chunk.splitlines():
+                decoded_line = line.decode('utf-8')
+                print('decoded_line: {}'.format(decoded_line))
+                yield decoded_line
 
 #: Basic text
 TEXT = TextHandler()
