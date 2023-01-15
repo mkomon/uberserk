@@ -1,0 +1,16 @@
+{
+    "urls": [
+      ["uberserk/__init__.py", "github:mkomon/uberserk/uberserk/__init__.py"],
+      ["uberserk/clients.py", "github:mkomon/uberserk/uberserk/clients.py"],
+      ["uberserk/datetime.py", "github:mkomon/uberserk/uberserk/datetime.py"],
+      ["uberserk/enums.py", "github:mkomon/uberserk/uberserk/enums.py"],
+      ["uberserk/exceptions.py", "github:mkomon/uberserk/uberserk/exceptions.py"],
+      ["uberserk/formats.py", "github:mkomon/uberserk/uberserk/formats.py"],
+      ["uberserk/models.py", "github:mkomon/uberserk/uberserk/models.py"],
+      ["uberserk/urequests.py", "github:mkomon/uberserk/uberserk/urequests.py"],
+      ["uberserk/utils.py", "github:mkomon/uberserk/uberserk/utils.py"]
+    ],
+    "deps": [
+    ],
+    "version": "0.1.0"
+}
